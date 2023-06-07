@@ -11,11 +11,14 @@ import itertools
 import tensorboardX
 
 size = 256
+channels = 3
+batch_size = 1
+input_shape = (channels, size, size)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # networks
-netG_A2B = Generator().to(device)
-netG_B2A = Generator().to(device)
+netG_A2B = Generator(input_shape).to(device)
+netG_B2A = Generator(input_shape).to(device)
 
 # 加载模型
 netG_A2B.load_state_dict(torch.load("models/netG_A2B.pth"))
@@ -24,8 +27,10 @@ netG_B2A.load_state_dict(torch.load("models/netG_B2A.pth"))
 netG_A2B.eval()
 netG_B2A.eval()
 
-input_A = torch.ones([1, 3, size, size], dtype=torch.float).to(device)
-input_B = torch.ones([1, 3, size, size], dtype=torch.float).to(device)
+input_A = torch.ones([batch_size, channels, size, size],
+                     dtype=torch.float).to(device)
+input_B = torch.ones([batch_size, channels, size, size],
+                     dtype=torch.float).to(device)
 
 transforms_ = [
     transforms.ToTensor(),

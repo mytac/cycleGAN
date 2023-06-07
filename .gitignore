@@ -9,6 +9,7 @@ dataset
 logs
 models
 outputs
+images
 
 # Distribution / packaging
 .Python

@@ -8,13 +8,19 @@ from PIL import Image  # 图像处理相关操作
 import torchvision.transforms as trForms  # 数据增强
 
 
+## 如果输入的数据集是灰度图像，将图片转化为rgb图像(本次采用的facades不需要这个)
+def to_rgb(image):
+    rgb_image = Image.new("RGB", image.size)
+    rgb_image.paste(image)
+    return rgb_image
+
+
 class ImageDataset(Dataset):
-    def __init__(self, root="", transform=None, model="train"):
+    def __init__(self, root="", transform=None,model="train"):
         self.transform = trForms.Compose(transform) #合并transformer
 
         # root数据存放的根目录，model一个是train一个是test
         self.pathA = os.path.join(root, model+"A/*")
-
         self.pathB = os.path.join(root, model+"B/*")
 
         self.list_A = glob.glob(self.pathA)
@@ -27,6 +33,12 @@ class ImageDataset(Dataset):
         #读取数据
         img_A=Image.open(img_pathA)
         img_B=Image.open(img_pathB)
+
+        # 如果是灰度图，把灰度图转换为RGB图
+        if img_A.mode != "RGB":
+            img_A = to_rgb(img_A)
+        if img_B.mode != "RGB":
+            img_B = to_rgb(img_B)
 
         #数据预处理
         item_A=self.transform(img_A)
