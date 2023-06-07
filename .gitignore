@@ -8,6 +8,7 @@ __pycache__/
 dataset
 logs
 models
+outputs
 
 # Distribution / packaging
 .Python

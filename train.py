@@ -12,9 +12,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 batch_size = 1
 size = 256
 lr = 0.0002
-n_epoch = 100
+n_epoch = 200
 epoch = 0
-decay_epoch = 50
+decay_epoch = 100
 
 # networks
 netG_A2B = Generator().to(device)
@@ -76,7 +76,7 @@ for epoch in range(n_epoch):
         same_A=netG_B2A(real_A)
         loss_identity_A=loss_identity(same_A,real_A)*5.0
 
-        #真A生成假的B,用判别器预测结果
+        #真A生成假的B,用判别器预测结果 GAN_LOSS
         fake_B=netG_A2B(real_A)
         pred_fake=netD_B(fake_B)
         loss_GAN_A2B=loss_GAN(pred_fake,label_real)
@@ -110,7 +110,7 @@ for epoch in range(n_epoch):
         fake_A=fake_A_buffer.push_and_pop(fake_A)
         pred_fake=netD_A(fake_A.detach()) #对于生成数据，判别器预测结果 防止判别器更新时对生成器的梯度进行计算，进行detach
         # TODO 下面的 pred_real e应该是 pred_fake吧？
-        loss_D_fake=loss_GAN(pred_real,label_fake) #判别器对生成数据判别为负样本
+        loss_D_fake=loss_GAN(pred_fake,label_fake) #判别器对生成数据判别为负样本
 
         #total loss
         loss_D_A=(loss_D_real+loss_D_fake)*0.5
@@ -121,10 +121,10 @@ for epoch in range(n_epoch):
 
         #定义判别器B的loss
         opt_DB.zero_grad()
-        pred_real=netD_A(real_B)
+        pred_real=netD_B(real_B)
         loss_D_real=loss_GAN(pred_real,label_real)
 
-        fake_B=fake_A_buffer.push_and_pop(fake_B)
+        fake_B=fake_B_buffer.push_and_pop(fake_B)
         pred_fake=netD_B(fake_B.detach()) #对于生成数据，判别器预测结果
         # TODO 下面的 pred_real e应该是 pred_fake吧？
         loss_D_fake=loss_GAN(pred_real,label_fake) #判别器对生成数据判别为负样本
