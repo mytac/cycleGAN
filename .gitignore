@@ -10,6 +10,7 @@ logs
 models
 outputs
 images
+outputs-epoch100
 
 # Distribution / packaging
 .Python

@@ -28,9 +28,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 batch_size = 1
 size = 256
 lr = 0.0002
-n_epoch = 20
+n_epoch = 50
 epoch = 0
-decay_epoch = 10
+decay_epoch = 25
 sample_interval=100
 
 img_height=256
@@ -176,7 +176,7 @@ for epo in range(epoch,n_epoch):
 
 
         ######################################
-        ############ DISCRIMINATOR  A   ######
+        ############ 判别器  A   ######
         ######################################
 
         #定义判别器A的loss - 真的图像判别为真
@@ -195,7 +195,7 @@ for epo in range(epoch,n_epoch):
 
 
         ######################################
-        ############ DISCRIMINATOR  B   ######
+        ############ 判别器  B   ######
         ######################################
 
         #定义判别器B的loss
